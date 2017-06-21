@@ -108,6 +108,8 @@ public class ReadingManager {
       String[] words = LojbanTextUtils.sentenceToWords(line);
 
       tts.speak("", TextToSpeech.QUEUE_FLUSH, null, "flushQueue");
+      tts.setPitch(1.0f);
+      tts.setSpeechRate(0.5f);
 
       for (int i = 0; i < words.length; i++) {
         String word = words[i];
@@ -116,8 +118,10 @@ public class ReadingManager {
           tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord" + i);
           tts.setLanguage(EN_US);
           tts.setPitch(1.5f);
+          tts.setSpeechRate(0.85f);
           tts.speak(mDictionary.getMeaning(word) + " . .", TextToSpeech.QUEUE_ADD, null, "readMeaning" + i);
           tts.setPitch(1.0f);
+          tts.setSpeechRate(0.5f);
           mLearningManager.meaningGiven(word); //TODO Should come after actually given?
           //TODO Note that this may mess up the current sentence when hit back.
         }
