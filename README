@@ -1,0 +1,8 @@
+App to help you learn Lojban.  (Could be used for other languages, if modified.)
+
+Compilation requires https://github.com/Erhannis/LojbanCore - clone it and run `mvn clean install`.
+
+Requires eSpeak to be installed on the device; search the Play store.
+
+I extracted, cleaned, and used the dictionary file from udm.udmurtlyk.dictdata.engjbo "English-Lojban dictionary"; search the Play store.
+
