@@ -114,14 +114,21 @@ public class ReadingManager {
       for (int i = 0; i < words.length; i++) {
         String word = words[i];
         if (mLearningManager.shouldGiveMeaning(word)) {
+          tts.setPitch(1.0f);
+          tts.setSpeechRate(0.5f);
           tts.setLanguage(JBO);
-          tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord" + i);
+          tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord_a_" + i);
+          tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord_b_" + i);
+
           tts.setLanguage(EN_US);
           tts.setPitch(1.5f);
           tts.setSpeechRate(0.85f);
-          tts.speak(mDictionary.getMeaning(word) + " . .", TextToSpeech.QUEUE_ADD, null, "readMeaning" + i);
+          tts.speak(mDictionary.getMeaning(word) + " . ", TextToSpeech.QUEUE_ADD, null, "readMeaning" + i);
+
           tts.setPitch(1.0f);
           tts.setSpeechRate(0.5f);
+          tts.setLanguage(JBO);
+          tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord_c_" + i);
           mLearningManager.meaningGiven(word); //TODO Should come after actually given?
           //TODO Note that this may mess up the current sentence when hit back.
         }
