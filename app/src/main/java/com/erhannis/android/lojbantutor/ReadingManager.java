@@ -30,7 +30,7 @@ public class ReadingManager {
   public ReadingManager(Context ctx, Dictionary dictionary, LearningManager learningManager, String text) {
     this.mDictionary = dictionary;
     this.mLearningManager = learningManager;
-    this.mLines = LojbanTextUtils.lojbanToSentences(text);
+    this.mLines = LojbanTextUtils.lojbanToSentences(LojbanTextUtils.clean(text));
 
     tts = new TextToSpeech(ctx, new TextToSpeech.OnInitListener() {
       @Override
@@ -62,7 +62,7 @@ public class ReadingManager {
       @Override
       public void onDone(String utteranceId) {
         System.out.println("onDone " + utteranceId);
-        if ("readLojban".equals(utteranceId)) {
+        if ("readLojban1".equals(utteranceId)) {
           if (mPlaying) {
             mCurLine++;
           }
@@ -115,12 +115,14 @@ public class ReadingManager {
         mCurLine = 0;
       }
       String line = mLines[mCurLine];
+      System.out.println("line " + line);
       String[] words = LojbanTextUtils.sentenceToWords(line);
 
       tts.speak("", TextToSpeech.QUEUE_FLUSH, null, "flushQueue");
 
       for (int i = 0; i < words.length; i++) {
         String word = words[i];
+        System.out.println("word_" + i + " : " + word);
         if (mLearningManager.shouldGiveMeaning(word)) {
           if (READ_SENTENCE_BEFORE_DEFINITIONS) {
             readLojban(line, "readLojban0_" + i);
@@ -164,7 +166,11 @@ public class ReadingManager {
     tts.setLanguage(EN_US);
     StringBuilder sb = new StringBuilder();
     for (char c : word.toCharArray()) {
-      sb.append(", " + c);
+      if (c == '\'') {
+        sb.append(", apostrophe");
+      } else {
+        sb.append(", " + c);
+      }
     }
     tts.speak(sb.toString(), TextToSpeech.QUEUE_ADD, null, id);
   }
