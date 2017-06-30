@@ -61,6 +61,7 @@ public class ReadingManager {
 
       @Override
       public void onDone(String utteranceId) {
+        System.out.println("onDone " + utteranceId);
         if ("readLojban".equals(utteranceId)) {
           if (mPlaying) {
             mCurLine++;
@@ -95,7 +96,10 @@ public class ReadingManager {
   }
 
   public void backToBeginning() {
-    //TODO Do
+    mCurLine = -1;
+    if (mPlaying) {
+      playCurLine();
+    }
   }
 
   public void forwardToEnd() {
@@ -104,6 +108,9 @@ public class ReadingManager {
 
   protected void playCurLine() {
     if (mCurLine < mLines.length) {
+      if (mCurLine < 0) {
+        mCurLine = 0;
+      }
       String line = mLines[mCurLine];
       String[] words = LojbanTextUtils.sentenceToWords(line);
 
