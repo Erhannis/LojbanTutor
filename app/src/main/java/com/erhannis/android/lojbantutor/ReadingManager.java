@@ -106,6 +106,9 @@ public class ReadingManager {
     //TODO Do
   }
 
+  protected static final boolean READ_SENTENCE_BEFORE_DEFINITIONS = true;
+  protected static final boolean READ_SPELLING = true;
+
   protected void playCurLine() {
     if (mCurLine < mLines.length) {
       if (mCurLine < 0) {
@@ -115,34 +118,52 @@ public class ReadingManager {
       String[] words = LojbanTextUtils.sentenceToWords(line);
 
       tts.speak("", TextToSpeech.QUEUE_FLUSH, null, "flushQueue");
-      tts.setPitch(1.0f);
-      tts.setSpeechRate(0.5f);
 
       for (int i = 0; i < words.length; i++) {
         String word = words[i];
         if (mLearningManager.shouldGiveMeaning(word)) {
-          tts.setPitch(1.0f);
-          tts.setSpeechRate(0.5f);
-          tts.setLanguage(JBO);
-          tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord_a_" + i);
-          tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord_b_" + i);
+          if (READ_SENTENCE_BEFORE_DEFINITIONS) {
+            readLojban(line, "readLojban0_" + i);
+          }
 
-          tts.setLanguage(EN_US);
-          tts.setPitch(1.5f);
-          tts.setSpeechRate(0.85f);
-          tts.speak(mDictionary.getMeaning(word) + " . ", TextToSpeech.QUEUE_ADD, null, "readMeaning" + i);
+          readLojban(word + " .", "readWord1_" + i);
+          readSpellingEnglish(word, "spellWord_" + i);
+          readLojban(word + " .", "readWord2_" + i);
 
-          tts.setPitch(1.0f);
-          tts.setSpeechRate(0.5f);
-          tts.setLanguage(JBO);
-          tts.speak(word + " .", TextToSpeech.QUEUE_ADD, null, "readWord_c_" + i);
+          readEnglish(mDictionary.getMeaning(word) + " . ", "readMeaning_" + i);
+
+          readLojban(word + " .", "readWord3_" + i);
           mLearningManager.meaningGiven(word); //TODO Should come after actually given?
           //TODO Note that this may mess up the current sentence when hit back.
         }
       }
 
-      tts.setLanguage(JBO);
-      tts.speak(line, TextToSpeech.QUEUE_ADD, null, "readLojban");
+      readLojban(line, "readLojban1");
     }
+  }
+
+  protected void readEnglish(String text, String id) {
+    tts.setPitch(1.5f);
+    tts.setSpeechRate(0.85f);
+    tts.setLanguage(EN_US);
+    tts.speak(text, TextToSpeech.QUEUE_ADD, null, id);
+  }
+
+  protected void readLojban(String text, String id) {
+    tts.setPitch(1.0f);
+    tts.setSpeechRate(0.5f);
+    tts.setLanguage(JBO);
+    tts.speak(text, TextToSpeech.QUEUE_ADD, null, id);
+  }
+
+  protected void readSpellingEnglish(String word, String id) {
+    tts.setPitch(1.5f);
+    tts.setSpeechRate(0.85f);
+    tts.setLanguage(EN_US);
+    StringBuilder sb = new StringBuilder();
+    for (char c : word.toCharArray()) {
+      sb.append(c + " ");
+    }
+    tts.speak(sb.toString(), TextToSpeech.QUEUE_ADD, null, id);
   }
 }

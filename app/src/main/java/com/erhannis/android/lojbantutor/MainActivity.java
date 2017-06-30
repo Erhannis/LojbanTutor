@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
       List<String> dictLines = readAllLines(getResources().openRawResource(R.raw.jbo_eng_cleaned));
       mDictionary = new Dictionary(dictLines);
 
-      String alis = readAll(getResources().openRawResource(R.raw.alice));
+      String alis = readAll(getResources().openRawResource(R.raw.alis));
+      etText.setText(alis);
       mReadingManager = new ReadingManager(this, mDictionary, mLearningManager, alis);
     } catch (IOException e) {
       e.printStackTrace();
