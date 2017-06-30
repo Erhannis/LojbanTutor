@@ -127,7 +127,9 @@ public class ReadingManager {
           }
 
           readLojban(word + " .", "readWord1_" + i);
-          readSpellingEnglish(word, "spellWord_" + i);
+          if (READ_SPELLING) {
+            readSpellingEnglish(word, "spellWord_" + i);
+          }
           readLojban(word + " .", "readWord2_" + i);
 
           readEnglish(mDictionary.getMeaning(word) + " . ", "readMeaning_" + i);
@@ -162,7 +164,7 @@ public class ReadingManager {
     tts.setLanguage(EN_US);
     StringBuilder sb = new StringBuilder();
     for (char c : word.toCharArray()) {
-      sb.append(c + " ");
+      sb.append(", " + c);
     }
     tts.speak(sb.toString(), TextToSpeech.QUEUE_ADD, null, id);
   }
